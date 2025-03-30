@@ -149,6 +149,7 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'posts',
+    
 ]
 
 THIRD_PARTY_APPS = [
