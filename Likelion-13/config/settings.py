@@ -153,6 +153,7 @@ PROJECT_APPS = [
     'posts',
     'accounts',
     'comment',
+    'category',
 ]
 
 THIRD_PARTY_APPS = [

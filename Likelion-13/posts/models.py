@@ -23,6 +23,7 @@ class Post(BaseModels):
     created = models.DateTimeField(auto_now_add=True) # ��ü�� ������ �� ��¥�� �ð� ����
     updated = models.DateTimeField(auto_now=True)  # ��ü�� ������ �� ��¥�� �ð� ����
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post')
+    category = models.ManyToManyField('category.Category', related_name='post') #
 
     
     def __str__(self): # ǥ�� ���̽� Ŭ���� �޼���, �����? ���� �� �ִ� ���ڿ��� ��ȯ�ϵ��� ��
