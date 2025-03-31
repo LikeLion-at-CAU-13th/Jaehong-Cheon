@@ -151,6 +151,9 @@ DJANGO_APPS = [
 
 PROJECT_APPS = [
     'posts',
+    'accounts',
+    'comment',
+    'category',
 ]
 
 THIRD_PARTY_APPS = [
@@ -159,3 +162,4 @@ THIRD_PARTY_APPS = [
 
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
+AUTH_USER_MODEL = 'accounts.User'
