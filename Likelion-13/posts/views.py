@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404 # �߰�
 from django.views.decorators.http import require_http_methods # �߰�
 from .models import * # �߰�
 import json
+from comment.models import Comment
 
 @require_http_methods(["POST", "GET"])
 def post_list(request):
