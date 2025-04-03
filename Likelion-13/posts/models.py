@@ -21,7 +21,6 @@ class Post(BaseModels):
     title = models.CharField(max_length=30)
     content = models.TextField()
     status = models.CharField(max_length=15, choices=CHOICES, default='STORED')
- 
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post')
     
 
@@ -29,7 +28,7 @@ class Post(BaseModels):
     def __str__(self): 
         return self.title
     
-    class PostCategory(models.Model):
+class PostCategory(models.Model):
         post = models.ForeignKey('Post', on_delete=models.CASCADE, related_name='post_category')
         category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='category_post')
 
