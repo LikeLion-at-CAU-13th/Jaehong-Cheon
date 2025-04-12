@@ -42,7 +42,7 @@ SECRET_KEY = 'django-insecure-x$26wlqehc85-!h!*f(iwg%9%t@j1-_-w2a@&zaw^(uxqq2d1%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['*'] #이것도 했어요
 
 
 # Application definition
@@ -56,8 +56,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE = [ 
     'corsheaders.middleware.CorsMiddleware', # 반드시 가장 위쪽에 추가
+    'posts.logging_middleware.RequestLoggingMiddleware', # 로깅 미들웨어 추가
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -158,7 +159,7 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [ 
-    "corsheaders",
+    "corsheaders", #여기 있어요 서드파티
 ]
 
 
@@ -176,3 +177,49 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
 ]
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+
+    'formatters': {
+        'verbose': {
+            'format': '[{asctime}] [{levelname}] {message}',
+            'style': '{',
+        },
+    },
+
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+        'file_all': {
+            'level': 'INFO',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/all_requests.log',
+            'formatter': 'verbose',
+        },
+        'file_error': {
+            'level': 'WARNING',
+            'class': 'logging.FileHandler',
+            'filename': 'logs/errors.log',
+            'formatter': 'verbose',
+        },
+    },
+
+    'loggers': {
+        'request_logger': {
+            'handlers': ['console', 'file_all'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django': {
+            'handlers': ['console', 'file_error'],
+            'level': 'WARNING',
+            'propagate': False,
+        },
+    }
+}
+
+
