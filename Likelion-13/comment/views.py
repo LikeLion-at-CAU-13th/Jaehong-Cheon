@@ -5,18 +5,31 @@ from django.views.decorators.http import require_http_methods # ???
 from .models import * # ???
 import json
 from posts.models import Post 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.http import Http404
+from .serializers import CommentSerializer
 
+class Comment_list(APIView):
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        comments = Comment.objects.filter(post=post)
+        serializer = CommentSerializer(comments, many = True)
+        if serializer.is_valid:
+            return Response(serializer.data)
+        
 # Create your views here.
 @require_http_methods("GET")
-def comment_list(request, post_id): # ´ñ±Û ¸ñ·Ï Á¶È¸ 
+def comment_list(request, post_id): # ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½È¸ 
     if request.method == "GET":
         comment = get_object_or_404(Post, id=post_id)
-        # post_id¿¡ ÇØ´çÇÏ´Â Post °´Ã¼¸¦ °¡Á®¿È
+        
         comment_all = Comment.objects.filter(post=comment) 
-        #Comment ¸ðµ¨¿¡¼­ ¿Ü·¡Å°ÀÎ post¿Í ¿¬°áµÈ Post °´Ã¼¸¦ °¡Á®¿È
+        
 
         comment_json_all = []
-        # °¢ µ¥ÀÌÅÍ¸¦ Json Çü½ÄÀ¸·Î º¯È¯ÇÏ¿© ¸®½ºÆ®¿¡ ÀúÀå
+        
         for comment in comment_all:
             comment_json = {
                 "author_name" : comment.author_name,
