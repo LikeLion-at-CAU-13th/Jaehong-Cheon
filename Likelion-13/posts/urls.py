@@ -6,6 +6,6 @@ urlpatterns = [
     #path("page", index, name="my-page"),
     #path('<int:id>', get_post_detail),
     
-    path('', post_list, name="post_list"),
-    path('<int:post_id>/', post_detail, name='post_detail') # Post ?? ??
+    path('', PostList.as_view()),
+    path('<int:post_id>/', PostDetail.as_view()) # Post ?? ??
 ]

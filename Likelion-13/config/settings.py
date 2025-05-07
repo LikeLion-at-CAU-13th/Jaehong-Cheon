@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
-# ÆÄÀÏÀ» ÀÐ±â À§ÇØ ÇÊ¿äÇÑ ¶óÀÌºê·¯¸®¸¦ ¼³Ä¡ÇÕ´Ï´Ù.
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ð±ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ê¿ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ìºê·¯ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ï¿½Õ´Ï´ï¿½.
 from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
@@ -23,7 +23,7 @@ with open(secret_file) as f:
     secrets = json.loads(f.read())
 
 def get_secret(setting, secrets=secrets): 
-# secret º¯¼ö¸¦ °¡Á®¿À°Å³ª ±×·¸Áö ¸ø ÇÏ¸é ¿¹¿Ü¸¦ ¹ÝÈ¯
+# secret ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å³ï¿½ ï¿½×·ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½Ü¸ï¿½ ï¿½ï¿½È¯
     try:
         return secrets[setting]
     except KeyError:
@@ -42,7 +42,7 @@ SECRET_KEY = 'django-insecure-x$26wlqehc85-!h!*f(iwg%9%t@j1-_-w2a@&zaw^(uxqq2d1%
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*'] #ÀÌ°Íµµ Çß¾î¿ä
+ALLOWED_HOSTS = ['*'] #ï¿½Ì°Íµï¿½ ï¿½ß¾ï¿½ï¿½
 
 
 # Application definition
@@ -57,8 +57,8 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [ 
-    'corsheaders.middleware.CorsMiddleware', # ¹Ýµå½Ã °¡Àå À§ÂÊ¿¡ Ãß°¡
-    'posts.logging_middleware.RequestLoggingMiddleware', # ·Î±ë ¹Ìµé¿þ¾î Ãß°¡
+    'corsheaders.middleware.CorsMiddleware', # ï¿½Ýµï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ê¿ï¿½ ï¿½ß°ï¿½
+    'posts.logging_middleware.RequestLoggingMiddleware', # ï¿½Î±ï¿½ ï¿½Ìµï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -159,20 +159,21 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [ 
-    "corsheaders", #¿©±â ÀÖ¾î¿ä ¼­µåÆÄÆ¼
+    "corsheaders", #ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¾ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¼
+    "rest_framework",
 ]
 
 
 INSTALLED_APPS = DJANGO_APPS + PROJECT_APPS + THIRD_PARTY_APPS
 AUTH_USER_MODEL = 'accounts.User'
-# ÀÎÁõ °ü·Ã ¿äÃ»(ÄíÅ°, ¼¼¼Ç µî)À» Çã¿ë
-# ¿¹¸¦ µé¾î ºê¶ó¿ìÀú°¡ ¹é¿£µå ¼­¹ö·Î ÄíÅ°¸¦ Àü¼ÛÇÏ°Å³ª, ¹é¿£µå¿¡¼­ ÄíÅ°¸¦ ÀÀ´äÀ¸·Î º¸³¾ ¼ö ÀÖÀ½
+# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã»(ï¿½ï¿½Å°, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½)ï¿½ï¿½ ï¿½ï¿½ï¿½
+# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½é¿£ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï°Å³ï¿½, ï¿½é¿£ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½Å°ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 CORS_ALLOW_CREDENTIALS = True
 
-# ¼­¹ö·Î ¿äÃ» º¸³¾ ¼ö ÀÖ´Â µµ¸ÞÀÎµé Á¤ÀÇ
-# ¿©±â¿¡¼­ÀÇ localhost´Â EC2 ÀÎ½ºÅÏ½ºÀÇ ·ÎÄÃÈ¯°æÀÌ ¾Æ´Ï¶ó ÇÁ·ÐÆ®¿£µå °³¹ß ·ÎÄÃ È¯°æ ÀÇ¹Ì
-# 3000 Æ÷Æ®´Â ÇÁ·ÐÆ®¿£µå React ¾ÖÇÃ¸®ÄÉÀÌ¼ÇÀÇ Æ÷Æ® ¹øÈ£
-# ÃßÈÄ ÇÁ·ÐÆ®¿£µå¿¡¼­ À¥ ÆäÀÌÁö ¹èÆ÷ ÈÄ µµ¸ÞÀÎ ¸ÅÇÎÇß´Ù¸é ÇØ´ç µµ¸ÞÀÎ Ãß°¡ ÇÊ¿ä
+# ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã» ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Îµï¿½ ï¿½ï¿½ï¿½ï¿½
+# ï¿½ï¿½ï¿½â¿¡ï¿½ï¿½ï¿½ï¿½ localhostï¿½ï¿½ EC2 ï¿½Î½ï¿½ï¿½Ï½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½È¯ï¿½ï¿½ï¿½ï¿½ ï¿½Æ´Ï¶ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ È¯ï¿½ï¿½ ï¿½Ç¹ï¿½
+# 3000 ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ React ï¿½ï¿½ï¿½Ã¸ï¿½ï¿½ï¿½ï¿½Ì¼ï¿½ï¿½ï¿½ ï¿½ï¿½Æ® ï¿½ï¿½È£
+# ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½Æ®ï¿½ï¿½ï¿½å¿¡ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ß´Ù¸ï¿½ ï¿½Ø´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½ ï¿½Ê¿ï¿½
 CORS_ALLOWED_ORIGINS = [ 
     "http://localhost:3000",
     "http://127.0.0.1:3000",
