@@ -6,9 +6,13 @@ from .serializers import *
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth import logout
+from config.permissions import IsAuthor, IsValidTime
 
 class RegisterView(APIView):
+    permission_classes = [IsValidTime]
+
     def post(self, request):
+
         serializer = RegisterSerializer(data=request.data)
 
         # 유효성 검사 
@@ -37,6 +41,8 @@ class RegisterView(APIView):
 
 
 class AuthView(APIView):
+    permission_classes = [IsValidTime]
+
     def post(self, request):
         serializer = AuthSerializer(data=request.data)
         
@@ -70,7 +76,7 @@ class AuthView(APIView):
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsValidTime]
 
     def post(self, request):
         logout(request)
