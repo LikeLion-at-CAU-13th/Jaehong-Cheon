@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="DB-251.25410.123">
+    <data-source name="@localhost" uuid="02a3a2aa-19a5-42e4-aaa5-02808f8c56e0">
+      <database-info product="MySQL" version="8.0.41" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.41" exact-driver-version="8.2">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>root</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema" qname="likelion13th" />
+        </introspection-scope>
+      </schema-mapping>
+      <load-sources>user_and_system_sources</load-sources>
+    </data-source>
+    <data-source name="likelion13th_rds" uuid="d9f26eec-d41a-46be-bcc2-45c4d55e49e8">
+      <database-info product="MySQL" version="8.0.41" jdbc-version="4.2" driver-name="MySQL Connector/J" driver-version="mysql-connector-j-8.2.0 (Revision: 06a1f724497fd81c6a659131fda822c9e5085b6c)" dbms="MYSQL" exact-version="8.0.41" exact-driver-version="8.2">
+        <extra-name-characters>#@</extra-name-characters>
+        <identifier-quote-string>`</identifier-quote-string>
+        <jdbc-catalog-is-schema>true</jdbc-catalog-is-schema>
+      </database-info>
+      <case-sensitivity plain-identifiers="exact" quoted-identifiers="exact" />
+      <secret-storage>master_key</secret-storage>
+      <user-name>admin</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="schema">
+            <name qname="@" />
+            <name qname="likelion13th" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+      <load-sources>user_and_system_sources</load-sources>
+      <ssh-properties>
+        <enabled>true</enabled>
+        <ssh-config-id>3e007feb-4f82-4ca9-837a-484900ba73a5</ssh-config-id>
+      </ssh-properties>
+    </data-source>
+  </component>
+</project>
