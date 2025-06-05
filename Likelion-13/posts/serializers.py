@@ -14,6 +14,8 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class ImageSerializer(serializers.ModelSerializer):
+    image = serializers.ImageField(write_only=True)
+
     class Meta:
         model = Image
-        fields = "__all__"
+        fields = ['image']

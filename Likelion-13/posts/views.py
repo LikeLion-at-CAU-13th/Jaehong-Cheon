@@ -19,6 +19,8 @@ from django.core.files.storage import default_storage
 from .serializers import ImageSerializer
 from django.conf import settings
 import boto3
+import uuid
+from rest_framework.parsers import MultiPartParser, FormParser
 
 class PostList(APIView):
     permission_classes = [IsAuthor, IsValidTime]
@@ -51,14 +53,20 @@ class PostDetail(APIView):
     @swagger_auto_schema(
             operation_summary="특정 게시글 조회",
             operation_description="특정 게시글을 조회합니다.",
-            request_body= PostSerializer,
-            responses={}
+            responses={200: PostSerializer}
     )
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         serializer = PostSerializer(post)
         return Response(serializer.data)
     
+    @swagger_auto_schema(
+            operation_summary= "게시글 수정",
+            operation_description= "게시글을 수정합니다.",
+            request_body= PostSerializer,
+            responses= {200: PostSerializer, 400: "잘못된 요청"}
+    )
+            
     def put(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         self.check_object_permissions(request, post)
@@ -67,6 +75,12 @@ class PostDetail(APIView):
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @swagger_auto_schema(
+            operation_summary= "게시글 삭제",
+            operation_description= "게시글을 삭제합니다.",
+            responses= {204: PostSerializer, 404: "잘못된 요청"}
+    )
     def delete(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         self.check_object_permissions(request, post)
@@ -75,6 +89,22 @@ class PostDetail(APIView):
     
 
 class ImageUploadView(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+
+    @swagger_auto_schema(
+            operation_summary= "사진 파일 업로드",
+            operation_description= "사진파일을 업로드합니다.",
+            manual_parameters=[
+            openapi.Parameter(
+                name='image',
+                in_=openapi.IN_FORM,
+                type=openapi.TYPE_FILE,
+                description='업로드할 이미지 파일',
+                required=True
+            )
+        ],
+            responses= {201: ImageSerializer, 400: "잘못된 요청"}
+    )
     def post(self, request):
         if 'image' not in request.FILES:
             return Response({"error": "No image file"}, status=status.HTTP_400_BAD_REQUEST)
@@ -89,7 +119,8 @@ class ImageUploadView(APIView):
         )
 
         # S3에 파일 저장
-        file_path = f"uploads/{image_file.name}"
+        file_name = f"{uuid.uuid4().hex}_{image_file.name}"
+        file_path = f"uploads/{file_name}"
         # S3에 파일 업로드
         try:
             s3_client.put_object(

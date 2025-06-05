@@ -120,7 +120,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DB_PW_local = get_secret("DB_PW_local")
 
-#로컬
+# #로컬
 # DATABASES = {
 # 	'default': {
 # 		'ENGINE': 'django.db.backends.mysql',
@@ -151,7 +151,7 @@ DATABASES = {
 # 		'ENGINE': 'django.db.backends.mysql',
 # 		'NAME': "likelion13th",
 # 		'USER': "admin", # aws에서 만든 사용자명
-# 		'PASSWORD': DB_PW, # 비밀번호는 secrets.json에 저장
+# 		'PASSWORD': RDS_PW, # 비밀번호는 secrets.json에 저장
 # 		'HOST': "likelion13th.crgcm8c448r8.ap-northeast-2.rds.amazonaws.com", #RDS 엔드포인트
 # 		'PORT': '3306', # RDSDB연결
 # 	}
