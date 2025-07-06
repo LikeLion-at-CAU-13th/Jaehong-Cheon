@@ -7,5 +7,6 @@ urlpatterns = [
     #path('<int:id>', get_post_detail),
     
     path('', PostList.as_view()),
-    path('<int:post_id>/', PostDetail.as_view()) # Post ?? ??
+    path('<int:post_id>/', PostDetail.as_view()), # Post ?? ??
+    path('upload/', ImageUploadView.as_view(), name='image-upload')
 ]

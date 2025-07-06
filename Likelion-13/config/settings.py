@@ -16,6 +16,9 @@ from pathlib import Path
 import os, json
 from django.core.exceptions import ImproperlyConfigured
 from datetime import timedelta
+import pymysql
+
+pymysql.install_as_MySQLdb()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 secret_file = os.path.join(BASE_DIR, 'secrets.json') 
@@ -86,7 +89,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
 ]
+ACCOUNT_LOGIN_METHODS = {'email'}                  # 로그인 방식 설정
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*']    # 회원가입 시 필수 입력 필드 설정
 
 ROOT_URLCONF = 'config.urls'
 
@@ -112,13 +118,44 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+DB_PW_local = get_secret("DB_PW_local")
+
+# #로컬
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': "likelion13th",
+# 		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
+# 		'PASSWORD': DB_PW_local, # 비밀번호는 secrets.json에 저장
+# 		'HOST': 'localhost',
+# 		'PORT': '3306',
+# 	}
+# }
+RDS_PW = get_secret("RDS_PW")
+...
+#원격 연결용
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+	'default': {
+		'ENGINE': 'django.db.backends.mysql',
+		'NAME': "likelion13th",
+		'USER': "admin", # aws에서 만든 사용자명
+		'PASSWORD': RDS_PW, # 비밀번호는 secrets.json에 저장
+		'HOST': "127.0.0.1",
+		'PORT': '3307', # 터널에서 연결할 로컬 포트
+	}
 }
 
+# EC2서버에서 바로 연결
+# DATABASES = {
+# 	'default': {
+# 		'ENGINE': 'django.db.backends.mysql',
+# 		'NAME': "likelion13th",
+# 		'USER': "admin", # aws에서 만든 사용자명
+# 		'PASSWORD': RDS_PW, # 비밀번호는 secrets.json에 저장
+# 		'HOST': "likelion13th.crgcm8c448r8.ap-northeast-2.rds.amazonaws.com", #RDS 엔드포인트
+# 		'PORT': '3306', # RDSDB연결
+# 	}
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators
@@ -179,9 +216,15 @@ PROJECT_APPS = [
 ]
 
 THIRD_PARTY_APPS = [ 
+    "storages",
     "corsheaders", #���� �־�� ������Ƽ
     "rest_framework",
     'rest_framework_simplejwt',
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "allauth.socialaccount.providers.google", 
+    "drf_yasg",
 ]
 
 
@@ -244,6 +287,17 @@ LOGGING = {
             'propagate': False,
         },
     }
+}
+###AWS###
+AWS_ACCESS_KEY_ID = get_secret("AWS_ACCESS_KEY_ID") # .csv 파일에 있는 내용을 입력 Access key ID. IAM 계정 관련
+AWS_SECRET_ACCESS_KEY = get_secret("AWS_SECRET_ACCESS_KEY") # .csv 파일에 있는 내용을 입력 Secret access key. IAM 계정 관련
+AWS_REGION = 'ap-northeast-2'
+
+###S3###
+AWS_STORAGE_BUCKET_NAME = 'likelion13th-jaehong'
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.%s.amazonaws.com' % (AWS_STORAGE_BUCKET_NAME,AWS_REGION)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',
 }
 
 
