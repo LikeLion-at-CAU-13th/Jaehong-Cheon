@@ -21,7 +21,7 @@ from django.conf import settings
 import boto3
 import uuid
 from rest_framework.parsers import MultiPartParser, FormParser
-from config.custom_exception_handler import PostNotFoundException
+from config.custom_exception_handler import PostNotFoundException, BaseCustomException
 
 
 class PostList(APIView):
@@ -33,9 +33,14 @@ class PostList(APIView):
     )
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
-        if serializer.is_valid(raise_exception=True):
+        if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        field_errors = []
+        for field, messages in serializer.errors.items():
+            for msg in messages:
+                field_errors.append(f"{field}: {msg}")
+        raise BaseCustomException(detail="; ".join(field_errors),code="VALIDATION_ERROR")
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @swagger_auto_schema(
@@ -47,6 +52,46 @@ class PostList(APIView):
         posts = Post.objects.all()
         serializers = PostSerializer(posts, many=True)
         return Response(serializers.data)
+    
+class PostDetail(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly, IsAuthor, IsValidTime]
+
+    @swagger_auto_schema(
+            operation_summary="특정 게시글 조회",
+            operation_description="특정 게시글을 조회합니다.",
+            responses={200: PostSerializer}
+    )
+    def get(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        serializer = PostSerializer(post)
+        return Response(serializer.data)
+    
+    @swagger_auto_schema(
+            operation_summary= "게시글 수정",
+            operation_description= "게시글을 수정합니다.",
+            request_body= PostSerializer,
+            responses= {200: PostSerializer, 400: "잘못된 요청"}
+    )
+            
+    def put(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        self.check_object_permissions(request, post)
+        serializer = PostSerializer(post, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    @swagger_auto_schema(
+            operation_summary= "게시글 삭제",
+            operation_description= "게시글을 삭제합니다.",
+            responses= {204: PostSerializer, 404: "잘못된 요청"}
+    )
+    def delete(self, request, post_id):
+        post = get_object_or_404(Post, id=post_id)
+        self.check_object_permissions(request, post)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     
 
@@ -104,9 +149,8 @@ class ImageUploadView(APIView):
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
-...
 @require_http_methods(["GET"])
-def get_post_detail(reqeust, id):
+def get_post_detail(request, id):
     try:
         post = Post.objects.get(id=id)
         post_detail_json = {
@@ -121,4 +165,3 @@ def get_post_detail(reqeust, id):
             "data": post_detail_json})
     except Post.DoesNotExist:
         raise PostNotFoundException
-...
