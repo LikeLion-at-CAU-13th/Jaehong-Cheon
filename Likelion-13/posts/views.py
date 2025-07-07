@@ -21,9 +21,12 @@ from django.conf import settings
 import boto3
 import uuid
 from rest_framework.parsers import MultiPartParser, FormParser
+from config.custom_exception_handler import PostNotFoundException, BaseCustomException
+from comment.serializers import *
+
+
 
 class PostList(APIView):
-    permission_classes = [IsAuthor, IsValidTime]
     @swagger_auto_schema(
         operation_summary="게시글 생성",
         operation_description="새로운 게시글을 생성합니다.",
@@ -32,10 +35,10 @@ class PostList(APIView):
     )
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception= True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @swagger_auto_schema(
             operation_summary= "게시글 목록 조회",
@@ -46,7 +49,7 @@ class PostList(APIView):
         posts = Post.objects.all()
         serializers = PostSerializer(posts, many=True)
         return Response(serializers.data)
-
+    
 class PostDetail(APIView):
     permission_classes = [IsAuthenticatedOrReadOnly, IsAuthor, IsValidTime]
 
@@ -86,6 +89,9 @@ class PostDetail(APIView):
         self.check_object_permissions(request, post)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
     
 
 class ImageUploadView(APIView):
@@ -141,3 +147,20 @@ class ImageUploadView(APIView):
 
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
+@require_http_methods(["GET"])
+def get_post_detail(request, id):
+    try:
+        post = Post.objects.get(id=id)
+        post_detail_json = {
+            "id" : post.id,
+            "title" : post.title,
+            "content" : post.content,
+            "status" : post.status,
+            "user" : post.user.username
+        }
+        return JsonResponse({
+            "status" : 200,
+            "data": post_detail_json})
+    except Post.DoesNotExist:
+        raise PostNotFoundException

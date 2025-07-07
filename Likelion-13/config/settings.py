@@ -42,8 +42,8 @@ from datetime import timedelta
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    
     ),
+    'EXCEPTION_HANDLER': 'config.custom_exception_handler.custom_exception_handler',
 }
 
 REST_USE_JWT = True
@@ -90,6 +90,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     "allauth.account.middleware.AccountMiddleware",
+    "config.middlewares.ExceptionHandlerMiddleware",
 ]
 ACCOUNT_LOGIN_METHODS = {'email'}                  # 로그인 방식 설정
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*']    # 회원가입 시 필수 입력 필드 설정
@@ -121,29 +122,29 @@ WSGI_APPLICATION = 'config.wsgi.application'
 DB_PW_local = get_secret("DB_PW_local")
 
 # #로컬
+DATABASES = {
+ 	'default': {
+ 		'ENGINE': 'django.db.backends.mysql',
+ 		'NAME': "likelion13th",
+ 		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
+ 		'PASSWORD': DB_PW_local, # 비밀번호는 secrets.json에 저장
+ 		'HOST': 'localhost',
+ 		'PORT': '3306',
+ 	}
+ }
+RDS_PW = get_secret("RDS_PW")
+...
+#원격 연결용
 # DATABASES = {
 # 	'default': {
 # 		'ENGINE': 'django.db.backends.mysql',
 # 		'NAME': "likelion13th",
-# 		'USER': "root", # root로 접속하여 DB를 만들었다면 'root'
-# 		'PASSWORD': DB_PW_local, # 비밀번호는 secrets.json에 저장
-# 		'HOST': 'localhost',
-# 		'PORT': '3306',
+# 		'USER': "admin", # aws에서 만든 사용자명
+# 		'PASSWORD': RDS_PW, # 비밀번호는 secrets.json에 저장
+# 		'HOST': "127.0.0.1",
+# 		'PORT': '3307', # 터널에서 연결할 로컬 포트
 # 	}
 # }
-RDS_PW = get_secret("RDS_PW")
-...
-#원격 연결용
-DATABASES = {
-	'default': {
-		'ENGINE': 'django.db.backends.mysql',
-		'NAME': "likelion13th",
-		'USER': "admin", # aws에서 만든 사용자명
-		'PASSWORD': RDS_PW, # 비밀번호는 secrets.json에 저장
-		'HOST': "127.0.0.1",
-		'PORT': '3307', # 터널에서 연결할 로컬 포트
-	}
-}
 
 # EC2서버에서 바로 연결
 # DATABASES = {
