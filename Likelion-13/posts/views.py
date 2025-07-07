@@ -22,6 +22,8 @@ import boto3
 import uuid
 from rest_framework.parsers import MultiPartParser, FormParser
 from config.custom_exception_handler import PostNotFoundException, BaseCustomException
+from comment.serializers import *
+
 
 
 class PostList(APIView):
@@ -33,14 +35,9 @@ class PostList(APIView):
     )
     def post(self, request, format=None):
         serializer = PostSerializer(data=request.data)
-        if serializer.is_valid():
+        if serializer.is_valid(raise_exception= True):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        field_errors = []
-        for field, messages in serializer.errors.items():
-            for msg in messages:
-                field_errors.append(f"{field}: {msg}")
-        raise BaseCustomException(detail="; ".join(field_errors),code="VALIDATION_ERROR")
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     @swagger_auto_schema(
@@ -92,6 +89,8 @@ class PostDetail(APIView):
         self.check_object_permissions(request, post)
         post.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
 
     
 
